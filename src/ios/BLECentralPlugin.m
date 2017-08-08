@@ -636,19 +636,24 @@
 
 #pragma mark - internal implemetation
 
-- (CBPeripheral*)findPeripheralByUUID:(NSString*)uuid {
+- (CBPeripheral*)findPeripheralByUUID:(NSString*)address 
+{
 
-    CBPeripheral *peripheral = nil;
+    NSUUID* uuid = [[NSUUID UUID] initWithUUIDString: address];
+    NSArray* peripherals = [manager
+		                    retrievePeripheralsWithIdentifiers: @[uuid]];
+    if ([pheriperals count] < 1) {
+		NSLog(@"Can't find a pheriferal %@ ", address);
+		return nil;
+	}
 
-    for (CBPeripheral *p in peripherals) {
+	// Get first found pheriperal.
+	CBPeripheral* peripheral = pheriperals[0];
+	if (nil == peripheral) {
+		NSLog(@"Pheriferal found but it's nil %@ ", address);
+		return nil;
+	}
 
-        NSString* other = p.identifier.UUIDString;
-
-        if ([uuid isEqualToString:other]) {
-            peripheral = p;
-            break;
-        }
-    }
     return peripheral;
 }
 
