@@ -642,13 +642,13 @@
     NSUUID* uuid = [[NSUUID UUID] initWithUUIDString: address];
     NSArray* peripherals = [manager
 		                    retrievePeripheralsWithIdentifiers: @[uuid]];
-    if ([pheriperals count] < 1) {
+    if ([peripherals count] < 1) {
 		NSLog(@"Can't find a peripheral %@ ", address);
 		return nil;
 	}
 
 	// Get first found pheriperal.
-	CBPeripheral* peripheral = pheriperals[0];
+	CBPeripheral* peripheral = peripherals[0];
 	if (nil == peripheral) {
 		NSLog(@"Peripheral found but it's nil %@ ", address);
 		return nil;
