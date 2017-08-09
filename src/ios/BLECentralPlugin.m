@@ -22,7 +22,7 @@
 @interface BLECentralPlugin() {
     NSDictionary *bluetoothStates;
 }
-- (CBPeripheral *)findPeripheralByUUID:(NSString *)uuid;
+- (CBPeripheral *)findPeripheralByUUID:(NSString *)address;
 - (void)stopScanTimer:(NSTimer *)timer;
 @end
 
@@ -643,14 +643,14 @@
     NSArray* peripherals = [manager
 		                    retrievePeripheralsWithIdentifiers: @[uuid]];
     if ([pheriperals count] < 1) {
-		NSLog(@"Can't find a pheriferal %@ ", address);
+		NSLog(@"Can't find a peripheral %@ ", address);
 		return nil;
 	}
 
 	// Get first found pheriperal.
 	CBPeripheral* peripheral = pheriperals[0];
 	if (nil == peripheral) {
-		NSLog(@"Pheriferal found but it's nil %@ ", address);
+		NSLog(@"Peripheral found but it's nil %@ ", address);
 		return nil;
 	}
 
