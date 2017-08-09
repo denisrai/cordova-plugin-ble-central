@@ -638,22 +638,34 @@
 
 - (CBPeripheral*)findPeripheralByUUID:(NSString*)address 
 {
+    // Getting from the current reference list
+    CBPeripheral *peripheral = nil;
+    for (CBPeripheral *p in peripherals) {
+        NSString* other = p.identifier.UUIDString;
+        if ([address isEqualToString:other]) {
+            peripheral = p;
+            break;
+        }
+    }
+    if(peripheral != nil)
+        return peripheral;
 
+    // Trying to get the peripheral from ios refrences
     NSUUID* uuid = [[NSUUID UUID] initWithUUIDString: address];
-    NSArray* peripherals = [manager
-		                    retrievePeripheralsWithIdentifiers: @[uuid]];
-    if ([peripherals count] < 1) {
-		NSLog(@"Can't find a peripheral %@ ", address);
-		return nil;
-	}
+    NSArray* internal_peripherals = [manager retrievePeripheralsWithIdentifiers: @[uuid]];
 
-	// Get first found pheriperal.
-	CBPeripheral* peripheral = peripherals[0];
-	if (nil == peripheral) {
-		NSLog(@"Peripheral found but it's nil %@ ", address);
-		return nil;
-	}
-
+    if ([internal_peripherals count] < 1) {
+        NSLog(@"Can't find a peripheral %@ ", address);
+        return nil;
+    }
+    
+    // Get first found pheriperal.
+    peripheral = internal_peripherals[0];
+    if (nil == peripheral) {
+        NSLog(@"Peripherals found but it's nil %@ ", address);
+        return nil;
+    }
+    
     return peripheral;
 }
 
