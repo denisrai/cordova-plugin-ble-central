@@ -22,7 +22,7 @@
 @interface BLECentralPlugin() {
     NSDictionary *bluetoothStates;
 }
-- (CBPeripheral *)findPeripheralByUUID:(NSString *)address;
+- (CBPeripheral *)findPeripheralByUUID:(NSString *)uuid;
 - (void)stopScanTimer:(NSTimer *)timer;
 @end
 
@@ -636,36 +636,19 @@
 
 #pragma mark - internal implemetation
 
-- (CBPeripheral*)findPeripheralByUUID:(NSString*)address 
-{
-    // Getting from the current reference list
+- (CBPeripheral*)findPeripheralByUUID:(NSString*)uuid {
+
     CBPeripheral *peripheral = nil;
+
     for (CBPeripheral *p in peripherals) {
+
         NSString* other = p.identifier.UUIDString;
-        if ([address isEqualToString:other]) {
+
+        if ([uuid isEqualToString:other]) {
             peripheral = p;
             break;
         }
     }
-    if(peripheral != nil)
-        return peripheral;
-
-    // Trying to get the peripheral from ios refrences
-    NSUUID* uuid = [[NSUUID UUID] initWithUUIDString: address];
-    NSArray* internal_peripherals = [manager retrievePeripheralsWithIdentifiers: @[uuid]];
-
-    if ([internal_peripherals count] < 1) {
-        NSLog(@"Can't find a peripheral %@ ", address);
-        return nil;
-    }
-    
-    // Get first found pheriperal.
-    peripheral = internal_peripherals[0];
-    if (nil == peripheral) {
-        NSLog(@"Peripherals found but it's nil %@ ", address);
-        return nil;
-    }
-    
     return peripheral;
 }
 
